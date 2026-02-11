@@ -22,7 +22,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
             await database.updateDocument(DATABASE_ID, TABLE_ID, existingMovie.$id, {
                 searchTerm: query,
                 count: existingMovie.count + 1,
-                lastSearchedMovie: movie.title,
+                title: movie.title,
             });
         } else {
             await database.createDocument(DATABASE_ID, TABLE_ID, ID.unique(), {
@@ -37,4 +37,18 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
         console.log(error);
         throw error;
     }
-} 
+}
+
+
+export const getTrendingMovies = async (): Promise<TrendingMovie[] | undefined> => {
+    try {
+        const result = await database.listDocuments(DATABASE_ID, TABLE_ID, [
+            Query.limit(5),
+            Query.orderDesc('count')
+        ]);
+        return result.documents as unknown as TrendingMovie[]
+    } catch (error) {
+        console.log(error);
+        return undefined;
+    }
+}
