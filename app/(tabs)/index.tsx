@@ -69,7 +69,7 @@ const Index = () => {
 
                         {trendingMovies && (
                             <View className="mt-10">
-                                <Text className="text-lg text-white font-bold mb-3">
+                                <Text className="text-xl text-white font-bold mb-3">
                                     Trending Movies
                                 </Text>
                                 <FlatList
