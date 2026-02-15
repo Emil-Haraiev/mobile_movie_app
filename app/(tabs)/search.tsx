@@ -5,11 +5,12 @@ import { images } from '@/constants/images';
 import { fetchMovies } from '@/services/api';
 import { updateSearchCount } from '@/services/appwrite';
 import useFetch from '@/services/useFetch';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
 
 const Search = () => {
     const [searchQuery, setSearchQuery] = useState("")
+    const trackedQueriesRef = useRef<string[]>([]);
 
 
     const {
@@ -38,10 +39,24 @@ const Search = () => {
     }, [searchQuery, loadMovies, reset]);
 
     useEffect(() => {
-        if (movies?.length > 0 && movies?.[0] && searchQuery.trim()) {
-            void updateSearchCount(searchQuery, movies[0]);
-        }
-    }, [movies, searchQuery])
+        const normalizedQuery = searchQuery.trim().toLowerCase();
+
+        if (normalizedQuery.length < 2) return;
+        if (!(movies?.length > 0 && movies?.[0])) return;
+
+        // If a longer query was already tracked (e.g. "messi"),
+        // skip tracking its shortened versions while deleting ("mess", "mes"...).
+        const hasLongerTrackedPrefix = trackedQueriesRef.current.some((trackedQuery) =>
+            trackedQuery.startsWith(normalizedQuery),
+        );
+
+        if (hasLongerTrackedPrefix) return;
+
+        if (trackedQueriesRef.current.includes(normalizedQuery)) return;
+
+        trackedQueriesRef.current.push(normalizedQuery);
+        void updateSearchCount(normalizedQuery, movies[0]);
+    }, [movies, searchQuery]);
     return (
         <View className="flex-1 bg-primary">
             <Image source={images.bg} className="absolute w-full z-0" resizeMode="cover" />

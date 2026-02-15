@@ -12,9 +12,12 @@ const database = new Databases(client);
 export const account = new Account(client);
 
 export const updateSearchCount = async (query: string, movie: Movie) => {
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return;
+
     try {
         const result = await database.listDocuments(DATABASE_ID, TABLE_ID, [
-            Query.equal("searchTerm", query),
+            Query.equal("searchTerm", normalizedQuery),
         ]);
 
         if (result.documents.length > 0) {
@@ -29,7 +32,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
             );
         } else {
             await database.createDocument(DATABASE_ID, TABLE_ID, ID.unique(), {
-                searchTerm: query,
+                searchTerm: normalizedQuery,
                 movie_id: movie.id,
                 title: movie.title,
                 count: 1,
