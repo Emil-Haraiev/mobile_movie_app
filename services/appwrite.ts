@@ -1,15 +1,15 @@
-import { Query, } from "appwrite";
-import { Client, Databases, ID } from "react-native-appwrite";
-
+import { Query } from "appwrite";
+import { Account, Client, Databases, ID } from "react-native-appwrite";
 
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
 const TABLE_ID = process.env.EXPO_PUBLIC_APPWRITE_TABLE_ID!;
 
-const cliet = new Client()
+const client = new Client()
     .setEndpoint(process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!);
 
-const database = new Databases(cliet);
+const database = new Databases(client);
+export const account = new Account(client);
 
 export const updateSearchCount = async (query: string, movie: Movie) => {
     try {
@@ -25,7 +25,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
                 existingMovie.$id,
                 {
                     count: existingMovie.count + 1,
-                }
+                },
             );
         } else {
             await database.createDocument(DATABASE_ID, TABLE_ID, ID.unique(), {
@@ -33,7 +33,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
                 movie_id: movie.id,
                 title: movie.title,
                 count: 1,
-                poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                poster_path: movie.poster_path,
             });
         }
     } catch (error) {
@@ -42,16 +42,12 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
     }
 };
 
-
-export const getTrendingMovies = async (): Promise<
-    TrendingMovie[] | undefined
-> => {
+export const getTrendingMovies = async (): Promise<TrendingMovie[] | undefined> => {
     try {
         const result = await database.listDocuments(DATABASE_ID, TABLE_ID, [
             Query.limit(5),
             Query.orderDesc("count"),
         ]);
-
         return result.documents as unknown as TrendingMovie[];
     } catch (error) {
         console.error(error);

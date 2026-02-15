@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
 
 const Search = () => {
-    const [searchQuery, setsearchQuery] = useState("")
+    const [searchQuery, setSearchQuery] = useState("")
 
 
     const {
@@ -31,17 +31,17 @@ const Search = () => {
             } else {
                 reset();
             }
-        }, 500);
+        }, 1000);
 
         return () => clearTimeout(timeoutId);
 
-    }, [searchQuery]);
+    }, [searchQuery, loadMovies, reset]);
 
     useEffect(() => {
-        if (movies?.length > 0 && movies?.[0]) {
-            updateSearchCount(searchQuery, movies[0])
+        if (movies?.length > 0 && movies?.[0] && searchQuery.trim()) {
+            void updateSearchCount(searchQuery, movies[0]);
         }
-    }, [movies])
+    }, [movies, searchQuery])
     return (
         <View className="flex-1 bg-primary">
             <Image source={images.bg} className="absolute w-full z-0" resizeMode="cover" />
@@ -60,7 +60,7 @@ const Search = () => {
                         <View className="my-5">
                             <SearchBar
                                 value={searchQuery}
-                                onChangeText={(text: string) => setsearchQuery(text)}
+                                onChangeText={(text: string) => setSearchQuery(text)}
                                 placeholder="Search for a movies"
                             />
                         </View>

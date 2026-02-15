@@ -1,8 +1,9 @@
+import { useAuth } from "@/context/AuthContext";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import React from 'react';
-import { Image, ImageBackground, Text, View } from "react-native";
+import { ActivityIndicator, Image, ImageBackground, Text, View } from "react-native";
 
 const TabIcon = ({ title, icon, focused }: any) => {
     if (focused) return (
@@ -27,7 +28,21 @@ const TabIcon = ({ title, icon, focused }: any) => {
 }
 
 
-const _Layout = () => {
+const TabsLayout = () => {
+    const { status } = useAuth();
+
+    if (status === "loading") {
+        return (
+            <View className="flex-1 bg-primary items-center justify-center">
+                <ActivityIndicator size="large" color="#fff" />
+            </View>
+        );
+    }
+
+    if (status === "pending") {
+        return <Redirect href="../(auth)/welcome" />;
+    }
+
     return (
         <Tabs
             screenOptions={{
@@ -89,7 +104,8 @@ const _Layout = () => {
                         <TabIcon focused={focused} icon={icons.person} title="Profile" />
                     )
                 }} />
+
         </Tabs>
     )
 }
-export default _Layout
+export default TabsLayout

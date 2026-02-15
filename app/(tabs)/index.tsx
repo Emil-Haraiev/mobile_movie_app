@@ -19,6 +19,7 @@ import MovieCard from "@/components/MovieCard";
 import SearchBar from "@/components/SearchBar";
 import TrendingCard from "@/components/TrendingCard";
 
+
 const Index = () => {
     const router = useRouter();
 

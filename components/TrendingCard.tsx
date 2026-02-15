@@ -6,16 +6,21 @@ import { images } from '../constants/images';
 
 
 const TrendingCard = ({
-    movie: { movie_id, title, poster_url },
+    movie: { movie_id, title, poster_path },
     index,
 }: TrendingCardProps) => {
+
     return (
         <Link href={`/movies/${movie_id}`} asChild>
             <TouchableOpacity className="w-32 relative pl-5">
                 <Image
-                    source={{ uri: poster_url }}
-                    className="w-32 h-48 rounded-lg"
-                    resizeMode="cover"
+                    source={{
+                        uri: poster_path
+                            ? `https://image.tmdb.org/t/p/w500${poster_path}`
+                            : "https://placehold.co/600x400/1a1a1a/FFFFFF.png",
+                    }}
+                    className='w-32 h-48 rounded-lg'
+                    resizeMode='cover'
                 />
 
                 <View className="absolute bottom-9 -left-3.5 px-2 py-1 rounded-full">
