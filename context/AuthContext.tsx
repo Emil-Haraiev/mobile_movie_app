@@ -1,8 +1,7 @@
 import { account } from "@/services/appwrite";
 import * as Linking from "expo-linking";
-import * as WebBrowser from "expo-web-browser";
 import * as SecureStore from "expo-secure-store";
-import { ID, Models, OAuthProvider } from "react-native-appwrite";
+import * as WebBrowser from "expo-web-browser";
 import {
     createContext,
     ReactNode,
@@ -11,6 +10,7 @@ import {
     useMemo,
     useState,
 } from "react";
+import { ID, Models, OAuthProvider } from "react-native-appwrite";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -156,7 +156,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
             await account.deleteSession({ sessionId: "current" });
         } catch {
-            // Ignore network/session errors and still reset local auth state.
+
         }
 
         await clearAuthMode();
@@ -184,7 +184,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-
     if (!context) {
         throw new Error("useAuth must be used within AuthProvider");
     }
