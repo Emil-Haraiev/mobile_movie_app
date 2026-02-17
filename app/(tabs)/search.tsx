@@ -43,9 +43,6 @@ const Search = () => {
 
         if (normalizedQuery.length < 2) return;
         if (!(movies?.length > 0 && movies?.[0])) return;
-
-        // If a longer query was already tracked (e.g. "messi"),
-        // skip tracking its shortened versions while deleting ("mess", "mes"...).
         const hasLongerTrackedPrefix = trackedQueriesRef.current.some((trackedQuery) =>
             trackedQuery.startsWith(normalizedQuery),
         );
