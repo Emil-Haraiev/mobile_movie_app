@@ -69,9 +69,7 @@ const Index = () => {
 
                         {trendingMovies && (
                             <View className="mt-10">
-                                <Text className="text-xl text-white font-bold mb-3">
-                                    Trending Movies
-                                </Text>
+
                                 <FlatList
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
@@ -85,14 +83,16 @@ const Index = () => {
                                     )}
                                     keyExtractor={(item) => item.movie_id.toString()}
                                     ItemSeparatorComponent={() => <View className="w-4" />}
+                                    ListHeaderComponent={
+                                        <Text className="text-xl text-white font-bold mb-3">
+                                            Trending Movies
+                                        </Text>
+                                    }
                                 />
                             </View>
                         )}
 
                         <>
-                            <Text className="text-lg text-white font-bold mt-5 mb-3">
-                                Latest Movies
-                            </Text>
 
                             <FlatList
                                 data={movies}
@@ -107,6 +107,11 @@ const Index = () => {
                                 }}
                                 className="mt-2 pb-32"
                                 scrollEnabled={false}
+                                ListHeaderComponent={
+                                    <Text className="text-lg text-white font-bold mt-5 mb-3">
+                                        Latest Movies
+                                    </Text>
+                                }
                             />
                         </>
                     </View>

@@ -15,7 +15,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const Welcome = () => {
     const { signIn, signUp, signInWithGoogle, skipAuth } = useAuth();
-
     const [isSignUpMode, setIsSignUpMode] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
